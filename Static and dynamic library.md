@@ -41,6 +41,9 @@
 - File size is smaller only because reference of object file have less memory only.
 - Library is deleted then loading that library not possible.
 
+
+![](https://pussgrc.github.io/assets/img/blog/post03.jpg)
+
 ### Commands
 ```
 	cl calcdll.c /LD	=>	/LD used to generate dll file and library file
