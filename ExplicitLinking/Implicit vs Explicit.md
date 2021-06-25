@@ -11,6 +11,8 @@
 |Recompilation of main program not required|Here also|
 |DLL will be freed only when application ends|It's possible to freed the DLL after we using it|
 |Before running our application our DLL and application must be link|When main application wants to call our DLL, that time only it link and serve the request|
+|It depends on the given header file in main program|It doesn't depend any thing|
 
 ### REFERENCE
-[Explicit Linking](http://awinsyspro.com/45-explicit-linking-of-dll-windows/)
+1. [Explicit Linking](http://awinsyspro.com/45-explicit-linking-of-dll-windows/)
+2. [Two types of dynamic linking](https://www.tenouk.com/ModuleCC1.html)
