@@ -10,7 +10,7 @@ int main() {
 	HMODULE hModule;
 
 	//create a handle to load library
-	hModule = LoadLibrary(TEXT("C:\\Users\\Vignesh\\Desktop\\VisualStudio\\explicitLinking\\DynamicLibrary\\Debug\\DynamicLibrary.dll"));
+	hModule = LoadLibrary(TEXT("C:\\Users\\Vignesh\\Desktop\\VisualStudio\\explicitLinking\\DynamicLibrary\\Debug\\DynamicLibraryExplicit.dll"));
 
 	if (NULL == hModule) {
 		printf("Load Library Failed\n\n");
@@ -23,8 +23,6 @@ int main() {
 	//STEP-2 GetProcAddress - Get The Function Address
 
 	FunAdd AdditionFun = hModule ? (FunAdd)GetProcAddress(hModule, "add") : NULL;
-	FunMul MultiplyFun = hModule ? (FunMul)GetProcAddress(hModule, "mul") : NULL;
-
 
 	//STEP-3 Check the Function Address is Valid or Not
 	if (NULL == AdditionFun)
@@ -36,7 +34,9 @@ int main() {
 		printf("Addition Function Address is Valid\n\n");
 		printf("Addition - %d\n", AdditionFun(10, 10));
 	}
+	system("PAUSE");
 
+	FunMul MultiplyFun = hModule ? (FunMul)GetProcAddress(hModule, "mul") : NULL;
 	if (NULL == MultiplyFun)
 	{
 		printf("Multiplication Function Address is Not Valid\n\n");
@@ -53,7 +53,7 @@ int main() {
 		FreeLibrary(hModule);
 	}
 
-	// system("PAUSE");
+	system("PAUSE");
 
 	return 0;
 }
