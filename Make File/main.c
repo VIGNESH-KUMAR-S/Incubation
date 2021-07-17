@@ -4,6 +4,7 @@
 int main(void)
 {
 	puts("This is Make File Concept\n");
-	printf("%s", getname());
+	int a = 10, b = 20;
+	printf("Add : %d", add(a, b));
 	return 0;
 }

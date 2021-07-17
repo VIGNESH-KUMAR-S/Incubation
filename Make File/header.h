@@ -1,1 +1,1 @@
-char* getname();
+int add(int, int);

@@ -1,8 +1,21 @@
-a.out:main.o getname.o
-	gcc main.o getname.o
+OUTPUT = output.exe
 
+#Executable File Creations
+a.out:main.o add.o
+	gcc main.o add.o -o output
+
+#Library File Creation
+library:
+	lib add.o
+
+#Object File Creation
 main.o:main.c
 	gcc -c main.c
 
-getname.o:getname.c
-	gcc -c getname.c
+add.o:add.c
+	gcc -c add.c
+
+clean:
+    del *.o
+	del *.lib
+	del $(OUTPUT)
