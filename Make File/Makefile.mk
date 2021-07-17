@@ -1,3 +1,4 @@
+#Variable name creation
 OUTPUT = output.exe
 
 #Executable File Creations
