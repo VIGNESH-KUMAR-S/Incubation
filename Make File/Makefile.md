@@ -3,7 +3,7 @@
 - Consider, we have a multiple source files that connected to each other. If we want to run main function then we should run all the available source files every time.
 - Since, command is very big for projects.
 - By using Makefile concept, all the commands are written in **Makefile**.
-- If we want to change the contents of one source file then we should re-compile that source file otherwise results are mismatched. In this scenario there is no need to re-compile all the source files.
+- If we want to change the contents of one source file then we should re-compile that source file otherwise results are mismatched. In this scenario there is no need to write all the commands. We just run the makefile.
 - ```nmake /f Makefile.mk [NAME]```
 - The above command is used to run the commands under particular **NAME**.
 - Example :- **`Makefile.mk`**
