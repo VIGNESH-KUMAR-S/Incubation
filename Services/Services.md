@@ -18,3 +18,14 @@
 - The service control manager (SCM) maintains a database of installed services and driver services, and provides a unified and secure means of controlling them. 
 - The database includes information on how each service or driver service should be started. 
 - It also enables system administrators to customize security requirements for each service and thereby control access to the service.
+- **Service Main** function is the entry point for service.
+- When the service control manager receives a request to start a service, it starts the service process (if it is not already running).
+- The main thread of the service process calls the **StartServiceCtrlDispatcher** function with a pointer to an array of **`SERVICE_TABLE_ENTRY`** structures.
+- **StartServiceCtrlDispatcher** connects the main thread of a service process to the service control manager, which causes the thread to be the service control dispatcher thread for the calling process.
+
+## References
+- [ServiceMain](https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nc-winsvc-lpservice_main_functiona).
+- [RegisterServiceControlHandler](https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-registerservicectrlhandlerexa).
+- [SetServiceStatus](https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-setservicestatus).
+- [StartServiceCtrlDispatcher](https://docs.microsoft.com/en-us/windows/win32/api/winsvc/nf-winsvc-startservicectrldispatchera).
+- [Service Entry Point](https://docs.microsoft.com/en-us/windows/win32/services/service-entry-point).
