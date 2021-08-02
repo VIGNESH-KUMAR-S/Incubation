@@ -38,6 +38,7 @@
 - User interfaces in Session 0 are not supported. Processes running in Session 0 have no access to the graphics hardware thus user interfaces cannot be directly displayed on the monitor.
 - We can use **CreateProcessAsUser** to create a process in another Session.
 - How Sessions worked with 3 logged on users on windows 10:
+
     ![](https://brianbondy.com/static/img/PostVistaSessions.png)
 
 # Tokens (Access Token)
