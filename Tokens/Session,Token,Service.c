@@ -3,6 +3,8 @@
 #include <WtsApi32.h>
 
 #define SERVICENAME L"aaaa"
+#define MSGTITLE L"Service aaaa"
+#define MSGBODY L"Hi ZOHO Incubation"
 #pragma comment(lib, "WtsApi32.lib")
 char* filename = "C:\\Users\\Vignesh Kumar S\\Desktop\\VisualStudio\\Session,Token,Service\\Text.txt";
 FILE* fp;
@@ -18,9 +20,9 @@ void __stdcall createService(void);
 void __stdcall startService(void);
 void __stdcall stopService(void);
 void __stdcall deleteService(void);
-void callNotepad();
+int callNotepad();
 
-void callNotepad()
+int callNotepad()
 {
 	HANDLE hToken = 0;
 	if (!WTSQueryUserToken(WTSGetActiveConsoleSessionId(), &hToken))
@@ -28,7 +30,7 @@ void callNotepad()
 		fopen_s(&fp, filename, "a+");
 		fp != 0 && fprintf(fp, "\n\tWTSQueryUserToken() Failed\n\n");
 		fp != 0 && fclose(fp);
-		return;
+		return -1;
 	}
 
 	STARTUPINFO si;
@@ -46,17 +48,18 @@ void callNotepad()
 		fopen_s(&fp, filename, "w+");
 		fp != 0 && fprintf(fp, "\n\tCreation of Process as User Failed\n\n");
 		fp != 0 && fclose(fp);
-		return;
+		return -1;
 	}
 	hProcess = pi.hProcess;
 	hThread = pi.hThread;
 
 	CloseHandle(hToken);
+	return 0;
 }
 
 void ServiceMain(int argc, char** argv)
 {
-	ServiceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS;
+	ServiceStatus.dwServiceType = SERVICE_WIN32_OWN_PROCESS;
 	ServiceStatus.dwCurrentState = SERVICE_START_PENDING;
 	ServiceStatus.dwControlsAccepted = SERVICE_ACCEPT_STOP;
 	ServiceStatus.dwWin32ExitCode = 0;
@@ -75,16 +78,27 @@ void ServiceMain(int argc, char** argv)
 		fp != 0 && fclose(fp);
 		return;
 	}
-
-	// We report the running status to SCM. 
-	ServiceStatus.dwCurrentState = SERVICE_RUNNING;
 	SetServiceStatus(hStatus, &ServiceStatus);
 
 	// Calling Notepad.exe from service
-	callNotepad();
+	int result = callNotepad();
+	if (!result)
+	{
+		// We report the running status to SCM. 
+		ServiceStatus.dwCurrentState = SERVICE_RUNNING;
+		SetServiceStatus(hStatus, &ServiceStatus);
+	}
+
+	// Message Box
+	DWORD response;
+	WTSSendMessage(WTS_CURRENT_SERVER_HANDLE, WTSGetActiveConsoleSessionId(),
+		MSGTITLE, (wcslen(MSGTITLE) + 1) * sizeof(wchar_t), MSGBODY, (wcslen(MSGBODY) + 1) * sizeof(wchar_t),
+		0, 0, &response, FALSE);
 
 	// The worker loop of a service
 	// Perform any tasks with this loop
+	// This loop should execute untill we stop our service otherwise process terminated
+
 	while (ServiceStatus.dwCurrentState == SERVICE_RUNNING)
 	{
 		Sleep(1000);
@@ -94,13 +108,14 @@ void ServiceMain(int argc, char** argv)
 
 void ControlHandler(DWORD request)
 {
-	DWORD exitCode;
+	DWORD exitCodeProcess;
+	DWORD exitCodeThread;
 	switch (request)
 	{
 	case SERVICE_CONTROL_STOP:
-		if (GetExitCodeProcess(hProcess, &exitCode) != 0)
+		if (GetExitCodeProcess(hProcess, &exitCodeProcess) != 0)
 		{
-			TerminateProcess(hProcess, exitCode);
+			TerminateProcess(hProcess, exitCodeProcess);
 			CloseHandle(hProcess);
 		}
 		else
@@ -109,9 +124,9 @@ void ControlHandler(DWORD request)
 			fp != 0 && fprintf(fp, "\n\tGetExitCodeProcess for hProcess Failed in ControlHandler()\n\n");
 			fp != 0 && fclose(fp);
 		}
-		if (GetExitCodeProcess(hThread, &exitCode) != 0)
+		if (GetExitCodeProcess(hThread, &exitCodeThread) != 0)
 		{
-			TerminateProcess(hThread, exitCode);
+			TerminateProcess(hThread, exitCodeThread);
 			CloseHandle(hThread);
 		}
 		else
@@ -182,13 +197,14 @@ void __stdcall createService(void)
 	SC_HANDLE schService;
 	WCHAR szPath[MAX_PATH];
 
+	// Get current process .exe file
 	if (!GetModuleFileName(NULL, szPath, MAX_PATH))
 	{
-		wprintf(L"\n\tCannot install service, error %u\n", GetLastError());
+		wprintf(L"\n\tUnable to get path, error %u\n", GetLastError());
 		return;
 	}
 	else
-		wprintf(L"\n\tService was installed successfully!\n");
+		wprintf(L"\n\tGot binary file path successfully!\n");
 
 	// Get a handle to the SCM database
 	schSCManager = handleToServiceControlManagerDB();
@@ -199,7 +215,7 @@ void __stdcall createService(void)
 		SERVICENAME,                   // name of service
 		SERVICENAME,                   // service name to display
 		SERVICE_ALL_ACCESS,        // desired access
-		SERVICE_WIN32_OWN_PROCESS | SERVICE_INTERACTIVE_PROCESS, // service type
+		SERVICE_WIN32_OWN_PROCESS, // service type
 		SERVICE_DEMAND_START,      // start type
 		SERVICE_ERROR_NORMAL,      // error control type
 		szPath,                    // path to service's binary
@@ -216,10 +232,10 @@ void __stdcall createService(void)
 		return;
 	}
 	else
-		wprintf(L"\n\tCreateService() is pretty fine!\n");
+		wprintf(L"\n\tCreateService() is SUCCESS!\n");
 
 	SERVICE_DESCRIPTION sd;
-	sd.lpDescription = L"This is Sample Service Creation by Me";
+	sd.lpDescription = L"This is Sample Service Creation by Vicky";
 	if (!ChangeServiceConfig2(
 		schService,                 // handle to service
 		SERVICE_CONFIG_DESCRIPTION, // change: description
@@ -460,7 +476,7 @@ int wmain(int argc, WCHAR* argv[])
 
 	SERVICE_TABLE_ENTRY DispatchTable[] =
 	{
-		{ SERVICENAME, (LPSERVICE_MAIN_FUNCTION)ServiceMain },
+		{ L"", (LPSERVICE_MAIN_FUNCTION)ServiceMain},
 		{ NULL, NULL }
 	};
 
