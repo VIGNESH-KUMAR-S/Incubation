@@ -246,6 +246,45 @@ void __stdcall createService(void)
 	else
 		wprintf(L"\n\tService description updated successfully.\n");
 
+	// Set the path of executable with "" in registry
+	HKEY hKey;
+	LSTATUS lStatus = RegOpenKeyEx(
+		HKEY_LOCAL_MACHINE,     //Registry Key will open under HKEY_LOCAL_MACHINE
+		L"SYSTEM\\CurrentControlSet\\Services\\aaTaskManager", //Path for Subkey
+		0,                      //ulOptions
+		KEY_ALL_ACCESS | KEY_WOW64_64KEY | KEY_EXECUTE | DELETE,        //Access Right
+		&hKey               //Pointer Variable which receives Registry Opens
+	);
+	if (lStatus != ERROR_SUCCESS)
+	{
+		puts("\n\thKey Regsitry Open Failed ");
+		printf("\n\tError No - %d\n\n", GetLastError());
+	}
+	else
+		puts("\n\thKey Registry Open Success - Set path with \"\"");
+
+	char buffer[999];
+	sprintf_s(buffer, sizeof(buffer), "\"%ls\"", szPath);
+	int szBuffer = strlen(buffer);
+
+	// Registry Set Value Function.
+	lStatus = RegSetValueExA(
+		hKey,         //Handle for Open Key
+		(LPCSTR)"ImagePath",     //Registry Value Name
+		0,            //Reserved
+		REG_EXPAND_SZ,    //Data type of Regsitry Key
+		&buffer,//Registry Data
+		szBuffer  //Size of Registry Data
+	);
+	//Check the Value set or not
+	if (lStatus != ERROR_SUCCESS)
+	{
+		puts("\n\tRegsitry Set Value Failed ");
+		printf("\n\tError No - %d\n\n", GetLastError());
+	}
+	else
+		puts("\n\tRegsitry Set Value Success");
+
 	CloseServiceHandle(schService);
 	CloseServiceHandle(schSCManager);
 }
