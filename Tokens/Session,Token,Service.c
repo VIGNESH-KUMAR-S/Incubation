@@ -250,7 +250,7 @@ void __stdcall createService(void)
 	HKEY hKey;
 	LSTATUS lStatus = RegOpenKeyEx(
 		HKEY_LOCAL_MACHINE,     //Registry Key will open under HKEY_LOCAL_MACHINE
-		L"SYSTEM\\CurrentControlSet\\Services\\aaTaskManager", //Path for Subkey
+		L"SYSTEM\\CurrentControlSet\\Services\\aaaa", //Path for Subkey
 		0,                      //ulOptions
 		KEY_ALL_ACCESS | KEY_WOW64_64KEY | KEY_EXECUTE | DELETE,        //Access Right
 		&hKey               //Pointer Variable which receives Registry Opens
