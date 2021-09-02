@@ -51,7 +51,8 @@
 ```
 
 # Reference
-1. [Static library](https://medium.com/@luischaparroc/c-static-library-bc9a050bb1e3)
-2. [Static library](https://medium.com/@bdov_/https-medium-com-bdov-c-static-libraries-what-why-and-how-b6b442b054d3)
-3. [Dynamic library, Adv and Dis-adv of static and dynamic](https://medium.com/@luischaparroc/https-medium-com-luischaparroc-dynamic-libraries-in-c-96a989848476)
-4. [Dynamic library](https://medium.com/@bdov_/https-medium-com-bdov-c-dynamic-libraries-what-why-and-how-66cf777019a7)
+1. [Library in c++](https://www.bogotobogo.com/cplusplus/libraries.php)
+2. [Static library](https://medium.com/@luischaparroc/c-static-library-bc9a050bb1e3)
+3. [Static library](https://medium.com/@bdov_/https-medium-com-bdov-c-static-libraries-what-why-and-how-b6b442b054d3)
+4. [Dynamic library, Adv and Dis-adv of static and dynamic](https://medium.com/@luischaparroc/https-medium-com-luischaparroc-dynamic-libraries-in-c-96a989848476)
+5. [Dynamic library](https://medium.com/@bdov_/https-medium-com-bdov-c-dynamic-libraries-what-why-and-how-66cf777019a7)
